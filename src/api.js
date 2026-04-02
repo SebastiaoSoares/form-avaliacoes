@@ -7,7 +7,7 @@ async function submitReview(responses) {
       headers: {
         'Content-Type': 'text/plain;charset=utf-8', 
       },
-      body: JSON.stringify({ respostas: responses }) 
+      body: JSON.stringify({ responses: responses }) 
     });
 
     if (response.ok) {
