@@ -1,7 +1,8 @@
 // exemplo de script do Google Apps Script para receber os dados do formulário e armazená-los em uma planilha do Google Sheets
 
 function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var spreadsheet = SpreadsheetApp.openById("CODIGO_PLANILHA_AQUI");
+  var sheet = spreadsheet.getSheetByName("NOME_GUIA_PLANILHA_AQUI");
   
   try {
     var payload = JSON.parse(e.postData.contents);
@@ -19,10 +20,10 @@ function doPost(e) {
     newData[0] = new Date();
     
     responses.forEach(function(item) {
-      var indexColuna = headers.indexOf(item.question);
+      var columnIndex = headers.indexOf(item.question);
       
-      if (indexColuna !== -1) {
-        newData[indexColuna] = item.review;
+      if (columnIndex !== -1) {
+        newData[columnIndex] = item.review;
       } else {
         headers.push(item.question);
         newData.push(item.review);
@@ -35,8 +36,8 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({"status": "success"}))
       .setMimeType(ContentService.MimeType.JSON);
       
-  } catch (erro) {
-    return ContentService.createTextOutput(JSON.stringify({"status": "error", "details": erro.toString()}))
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "details": error.toString()}))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
