@@ -1,13 +1,30 @@
-# Formulário de Avaliações de Serviço com Google Apps Script
+# Formulário de Avaliações (PWA + Google Sheets)
 
-Este projeto consiste em um formulário de avaliações com questões e escala de avaliação configuráveis. A arquitetura é minimalista, focada em atender o propósito de uma solução eficiente para o contexto em que o projeto foi proposto.
+Um sistema minimalista de avaliações projetado para rodar como PWA (totem em tablets ou computadores), enviando dados dinamicamente para uma planilha do Google Sheets via Google Apps Script. A estrutura foi pensada para facilitar a posterior ingestão desses dados por ferramentas de BI (Power BI, Looker, etc).
 
-## Características:
-- PWA com HTML, CSS e JS;
-- Perguntas e escala configuráveis via JS, inclusive com emojis opcionais;
-- Design sóbrio e simplista que valoriza o propósito rápido e necessário de uma avaliação, prezando pela experiência do usuário.
+## Características
+- **Front-end:** Vanilla JS empacotado com Vite (Leve, rápido e sem dependências complexas);
+- **Back-end/Banco:** Google Apps Script + Google Sheets;
+- **Dinâmico:** Perguntas e escalas (com ou sem emojis) configuráveis via arquivo de dados;
+- **Design:** Sóbrio e simplista, prezando pela conversão e experiência rápida do usuário.
 
-## Como utilizar:
-1. Faça clone do projeto;
-2. Duplique o arquivo em `data/questions.example.js` e modifique conforme necessário;
-3. Crie uma automação no Google Apps Script (use `scripts.example.gs` como exemplo).
+## Como utilizar e testar localmente
+
+1. Faça o clone do projeto e instale as dependências:
+   ```bash
+   npm install
+   ```
+
+2. Configure as perguntas: duplique o arquivo `data/questions.example.js`, renomeie para `data/questions.js` e modifique conforme necessário.
+
+Crie um arquivo .env na raiz do projeto contendo a URL do seu Webhook gerado no Google Apps Script:
+    ```bash
+    VITE_GOOGLE_SCRIPT_URL=sua_url_do_google_script_aqui
+    ```
+
+3. Crie a automação no Google Apps Script (use o código de `script.example.gs` como base).
+
+4. Inicie o servidor de desenvolvimento:
+    ```bash
+    npm run dev
+    ```
