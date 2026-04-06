@@ -62,13 +62,18 @@
   font-family: var(--font-family);
 }
 
+body, html {
+  width: 100dvw;
+  height: 100dvh;
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text-main);
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .container {
@@ -81,7 +86,7 @@ body {
 }
 
 h1 {
-  margin-bottom: var(--space-xxl);
+  font-size: var(--font-size-md);
   color: var(--color-primary);
 }
 
@@ -95,7 +100,8 @@ h1 {
 .titulo-pergunta {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xxl);
+  margin-top: var(--space-xxl);
   color: var(--color-text-main);
   text-align: center;
 }
@@ -190,38 +196,48 @@ h1 {
   opacity: 0.7;
 }
 
-/* --- ESTILOS DO FEEDBACK (SUCESSO/ERRO) --- */
-
-.feedback-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: var(--pad-feedback);
-  min-height: 350px;
-}
+/* --- FEEDBACK --- */
 
 .feedback-icon {
   font-size: var(--font-size-icon);
-  margin-bottom: var(--space-lg);
-  animation: var(--anim-popin);
-}
-
-.feedback-container h2 {
-  font-size: var(--font-size-lg);
   margin-bottom: var(--space-md);
-  color: var(--color-primary);
 }
 
-.feedback-mensagem {
-  font-size: var(--font-size-md);
+.loader-container {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.spinner {
+  width: 25px;
+  height: 25px;
+  border: 5px solid var(--color-text-light);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.enviando-texto {
   color: var(--color-text-light);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  animation: pulseText 1.5s infinite ease-in-out;
 }
 
-@keyframes popIn {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseText {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.feedback-icon.erro {
+  color: #d9534f;
 }
 
 /* --- ANIMAÇÃO EMOJI --- */
@@ -248,9 +264,56 @@ h1 {
   }
 }
 
+/* --- TRANSIÇÕES DE TELA (PERGUNTAS) --- */
+
+.anima-next {
+  animation: slideInRight 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.anima-prev {
+  animation: slideInLeft 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.anima-entrada {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* --- RESPONSIVIDADE (MOBILE) --- */
 
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
   .container {
     padding: var(--space-lg);
     width: 100dvw;

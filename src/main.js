@@ -6,7 +6,7 @@ import { questions } from '../data/questions.example.js'; // comente esta linha 
 const userResponses = {};
 let currentQuestionIndex = 0; 
 
-function renderScreen() {
+function renderScreen(direcao = 'next') {
   const app = document.querySelector('#app');
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
@@ -18,7 +18,7 @@ function renderScreen() {
       <p class="contador">Pergunta ${currentQuestionIndex + 1} de ${questions.length}</p>
       
       <div id="lista-perguntas">
-        <div class="bloco-pergunta anima-entrada">
+        <div class="bloco-pergunta anima-${direcao}">
           <p class="titulo-pergunta">${currentQuestion.question}</p>
           <div class="opcoes">
   `;
@@ -44,7 +44,7 @@ function renderScreen() {
         ${currentQuestionIndex > 0 ? `<button id="btn-voltar" class="btn-secundario">Voltar</button>` : '<div></div>'}
         
         <button id="btn-avancar" class="btn-enviar" ${!jaRespondida ? 'disabled' : ''}>
-          ${isLastQuestion ? 'Enviar Avaliação' : 'Próxima'}
+          ${isLastQuestion ? 'Finalizar' : 'Próxima'}
         </button>
       </div>
     </main>
@@ -62,34 +62,28 @@ function configurarCliques(isLastQuestion) {
   const avancarPergunta = async () => {
     if (!isLastQuestion) {
       currentQuestionIndex++;
-      renderScreen();
+      renderScreen('next');
     } else {
       const respostasFormatadas = Object.keys(userResponses).map(pergunta => ({
         question: pergunta,
         review: userResponses[pergunta]
       }));
 
-      if (actionButton) {
-        actionButton.innerText = "Enviando...";
-        actionButton.disabled = true;
-      }
-      if (backButton) backButton.disabled = true;
+      mostrarCarregamento();
 
-      const result = await submitReview(respostasFormatadas);
+      const tentarEnviar = async () => {
+        const result = await submitReview(respostasFormatadas);
 
-      if (result.status === 'success') {
-        mostrarFeedback('sucesso', result.message);
-        
-        for (let key in userResponses) delete userResponses[key];
-        currentQuestionIndex = 0; 
-      } else {
-        mostrarFeedback('erro', result.message);
-        if (actionButton) {
-            actionButton.innerText = "Enviar Avaliação";
-            actionButton.disabled = false;
+        if (result.status === 'success') {
+          for (let key in userResponses) delete userResponses[key];
+          currentQuestionIndex = 0; 
+          renderScreen('next');
+        } else {
+          mostrarErroTravado(result.message, tentarEnviar);
         }
-        if (backButton) backButton.disabled = false;
-      }
+      };
+
+      await tentarEnviar();
     }
   };
 
@@ -119,7 +113,7 @@ function configurarCliques(isLastQuestion) {
   if (backButton) {
     backButton.addEventListener('click', () => {
       currentQuestionIndex--;
-      renderScreen(); 
+      renderScreen('prev'); 
     });
   }
 
@@ -128,36 +122,46 @@ function configurarCliques(isLastQuestion) {
   }
 }
 
-function mostrarFeedback(tipo, mensagem) {
+function mostrarCarregamento() {
   const app = document.querySelector('#app');
-  const isSucesso = tipo === 'sucesso';
   
   app.innerHTML = /*html*/`
     <main class="container anima-entrada feedback-container">
-      <div class="feedback-icon ${tipo}">
-        ${isSucesso ? '✅' : '❌'}
-      </div>
-      <h2>${isSucesso ? 'Muito Obrigado!' : 'Atenção'}</h2>
-      <p class="feedback-mensagem">${mensagem}</p>
+      <span class="feedback-icon sucesso">✅</span>
+      <h2>Muito Obrigado!</h2>
+      <p class="feedback-mensagem">Agradecemos por responder nossa pesquisa.</p>
       
-      <button id="btn-recomecar" class="btn-enviar" style="margin-top: 30px;">
-        ${isSucesso ? 'Nova Avaliação' : 'Tentar Novamente'}
+      <div class="loader-container">
+        <div class="spinner"></div>
+        <p class="enviando-texto">Salvando dados...</p>
+      </div>
+    </main>
+  `;
+}
+
+function mostrarErroTravado(mensagem, callbackReenvio) {
+  const app = document.querySelector('#app');
+  
+  app.innerHTML = /*html*/`
+    <main class="container anima-entrada feedback-container">
+      <div class="feedback-icon erro">❌</div>
+      <h2>Sistema Pausado</h2>
+      <p class="feedback-mensagem">Não foi possível enviar a última avaliação.</p>
+      <p class="feedback-mensagem" style="font-size: 0.95rem; margin-top: 10px; color: #d9534f;">
+        Detalhe: ${mensagem}<br><br>
+        <strong>Por favor, verifique a conexão de internet do tablet.</strong> A coleta de novas respostas está travada para evitar perda de dados.
+      </p>
+      
+      <button id="btn-tentar-novamente" class="btn-enviar" style="margin-top: 30px; background-color: #d9534f;">
+        Tentar Enviar Novamente
       </button>
     </main>
   `;
   
-  document.getElementById('btn-recomecar').addEventListener('click', () => {
-      renderScreen(); 
+  document.getElementById('btn-tentar-novamente').addEventListener('click', () => {
+      mostrarCarregamento();
+      callbackReenvio(); 
   });
-  
-  if(isSucesso) {
-      setTimeout(() => {
-          const iconeSucesso = document.querySelector('.feedback-icon.sucesso');
-          if(iconeSucesso) {
-              renderScreen();
-          }
-      }, 5000);
-  }
 }
 
-renderScreen();
+renderScreen('next');

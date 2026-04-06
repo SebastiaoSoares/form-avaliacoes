@@ -1,16 +1,16 @@
 // duplique o questions.example.js e renomeie para questions.js, editando as perguntas e opções de resposta conforme necessário.
 
 const emoji_scale = [
-    { value: "Excelente", label: "Excelente", icon: "🤩" },
-    { value: "Bom", label: "Bom", icon: "🙂" },
-    { value: "Regular", label: "Regular", icon: "😐" },
+    { value: "Péssimo", label: "Péssimo", icon: "😡" },
     { value: "Ruim", label: "Ruim", icon: "😠" },
-    { value: "Péssimo", label: "Péssimo", icon: "😡" }
+    { value: "Regular", label: "Regular", icon: "😐" },
+    { value: "Bom", label: "Bom", icon: "🙂" },
+    { value: "Excelente", label: "Excelente", icon: "🤩" }
 ]; // o uso de emojis é opcional, mas pode tornar a avaliação mais visual e intuitiva
 
 const text_scale = [
     { value: "Cliente antigo", label: "Cliente antigo" },
-    { value: "Cliente novo", label: "Cliente novo" },
+    { value: "Cliente novo", label: "Cliente novo" }
 ];
 
 const questions = [
