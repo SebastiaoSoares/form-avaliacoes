@@ -247,3 +247,31 @@ h1 {
     transform: scale(1) rotate(0deg);
   }
 }
+
+/* --- RESPONSIVIDADE (MOBILE) --- */
+
+@media (max-width: 600px) {
+  .container {
+    padding: var(--space-lg);
+    width: 95%;
+  }
+
+  .botoes-acao {
+    flex-direction: column-reverse;
+    gap: var(--space-sm);
+  }
+
+  .btn-enviar, 
+  .btn-secundario {
+    width: 100%;
+    flex: none;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .titulo-pergunta {
+    font-size: var(--font-size-base);
+  }
+}
