@@ -106,6 +106,10 @@ function configurarCliques(isLastQuestion) {
       
       if (actionButton) actionButton.disabled = false; 
 
+      if (isLastQuestion) {
+        botoesOpcao.forEach(btn => btn.disabled = true);
+      }
+
       setTimeout(() => {
         avancarPergunta();
       }, 400);
