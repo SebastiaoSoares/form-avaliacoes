@@ -12,7 +12,7 @@ function renderScreen() {
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const jaRespondida = userResponses[currentQuestion.question];
 
-  let html = `
+  let html = /*html*/`
     <main class="container">
       <h1>Pesquisa de Satisfação</h1>
       <p class="contador">Pergunta ${currentQuestionIndex + 1} de ${questions.length}</p>
@@ -27,7 +27,7 @@ function renderScreen() {
     const temEmoji = opcao.icon ? true : false;
     const ativoClass = jaRespondida === opcao.value ? 'ativo' : ''; 
 
-    html += `
+    html += /*html*/`
       <button class="btn-opcao ${ativoClass}" data-pergunta="${currentQuestion.question}" data-valor="${opcao.value}">
         ${temEmoji ? `<span class="emoji">${opcao.icon}</span>` : ''}
         <span class="texto-opcao">${opcao.label}</span>
@@ -35,7 +35,7 @@ function renderScreen() {
     `;
   });
 
-  html += `
+  html += /*html*/`
           </div>
         </div>
       </div>
@@ -128,7 +128,7 @@ function mostrarFeedback(tipo, mensagem) {
   const app = document.querySelector('#app');
   const isSucesso = tipo === 'sucesso';
   
-  app.innerHTML = `
+  app.innerHTML = /*html*/`
     <main class="container anima-entrada feedback-container">
       <div class="feedback-icon ${tipo}">
         ${isSucesso ? '✅' : '❌'}
